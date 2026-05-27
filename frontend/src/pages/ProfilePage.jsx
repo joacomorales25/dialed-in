@@ -1,30 +1,26 @@
-import { useState } from 'react'
-
-// TODO: replace with API fetch → GET /api/profile
-const MOCK_PROFILE = {
-  name:     'Joaquín',
-  email:    'joaquin@example.com',
-  username: 'joaquin',
-  bio:      'Espresso enthusiast. Dialing in since 2022.',
-  machine:  'Gaggia Classic Pro',
-  grinder:  'Eureka Mignon Specialita',
-}
+import { useState, useEffect } from 'react'
+import { getProfile, updateProfile } from '../api'
 
 export default function ProfilePage() {
-  // TODO: replace initial value with API fetch → GET /api/profile
-  const [profile, setProfile] = useState(MOCK_PROFILE)
+  const [profile, setProfile] = useState({})
   const [editing, setEditing] = useState(false)
-  const [form, setForm]       = useState(MOCK_PROFILE)
+  const [form, setForm]       = useState({})
+
+  useEffect(() => {
+    getProfile()
+      .then(p => { setProfile(p); setForm(p) })
+      .catch(console.error)
+  }, [])
 
   function handleChange(e) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  // TODO: replace body with → PUT /api/profile
   function handleSave(e) {
     e.preventDefault()
-    setProfile(form)
-    setEditing(false)
+    updateProfile(form)
+      .then(updated => { setProfile(updated); setEditing(false) })
+      .catch(console.error)
   }
 
   function handleCancel() {
@@ -46,11 +42,11 @@ export default function ProfilePage() {
         {/* Avatar */}
         <div className="flex items-center gap-4 mb-8">
           <div className="w-14 h-14 rounded-full bg-violet-600 flex items-center justify-center text-white text-xl font-semibold">
-            {profile.name[0]}
+            {profile.name?.[0] ?? '?'}
           </div>
           <div>
-            <p className="text-ink-primary font-semibold text-sm">{profile.name}</p>
-            <p className="text-ink-muted text-sm">@{profile.username}</p>
+            <p className="text-ink-primary font-semibold text-sm">{profile.name ?? ''}</p>
+            <p className="text-ink-muted text-sm">@{profile.username ?? ''}</p>
           </div>
         </div>
 

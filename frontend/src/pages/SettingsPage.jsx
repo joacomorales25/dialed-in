@@ -1,28 +1,24 @@
-import { useState } from 'react'
-
-// TODO: replace with API fetch → GET /api/settings
-const MOCK_SETTINGS = {
-  language:      'English',
-  units:         'metric',
-  defaultDose:   18,
-  defaultYield:  36,
-  defaultTime:   27,
-}
+import { useState, useEffect } from 'react'
+import { getSettings, updateSettings } from '../api'
 
 export default function SettingsPage() {
-  // TODO: replace initial value with API fetch → GET /api/settings
-  const [settings, setSettings] = useState(MOCK_SETTINGS)
+  const [settings, setSettings] = useState({})
   const [saved, setSaved]       = useState(false)
+
+  useEffect(() => {
+    getSettings().then(setSettings).catch(console.error)
+  }, [])
 
   function handleChange(e) {
     setSettings(prev => ({ ...prev, [e.target.name]: e.target.value }))
     setSaved(false)
   }
 
-  // TODO: replace body with → PUT /api/settings
   function handleSave(e) {
     e.preventDefault()
-    setSaved(true)
+    updateSettings(settings)
+      .then(updated => { setSettings(updated); setSaved(true) })
+      .catch(console.error)
   }
 
   return (

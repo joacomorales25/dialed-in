@@ -1,13 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import RecipeForm    from '../components/recipes/RecipeForm'
 import ConfirmDialog from '../components/ConfirmDialog'
-
-// TODO: replace with API call → GET /api/recipes
-const MOCK_RECIPES = [
-  { id: 1, coffeeName: 'Ethiopia Yirgacheffe',    roaster: 'Onyx Coffee Lab', roast: 'light',  dose: 18,   yield: 36, time: 27, grinder: 12, author: 'Joaquín',      notes: 'Sweet and very floral.',             likes: 12, createdAt: '2026-04-19' },
-  { id: 2, coffeeName: 'Guatemala Huehuetenango', roaster: 'Stumptown',       roast: 'dark',   dose: 18,   yield: 36, time: 28, grinder: 11, author: 'mateespresso', notes: 'Fine grind and short time.',          likes: 7,  createdAt: '2026-04-17' },
-  { id: 3, coffeeName: 'Colombia El Paraíso',     roaster: 'Intelligentsia',  roast: 'medium', dose: 17.5, yield: 35, time: 30, grinder: 13, author: 'barista_ba',   notes: 'Classic 1:2 ratio, long extraction.', likes: 21, createdAt: '2026-04-15' },
-]
+import { getRecipes, createRecipe, likeRecipe, deleteRecipe } from '../api'
 
 const roastColor = { light: 'text-amber-400', medium: 'text-orange-400', dark: 'text-stone-400' }
 
@@ -30,39 +24,39 @@ const TrashIcon = () => (
 )
 
 export default function RecipesPage() {
-  // TODO: replace initial value with API fetch → GET /api/recipes
-  const [recipes, setRecipes]   = useState(MOCK_RECIPES)
+  const [recipes, setRecipes]   = useState([])
   const [showForm, setShowForm] = useState(false)
   const [toDelete, setToDelete] = useState(null) // recipe object pending deletion
 
-  // TODO: replace body with → POST /api/recipes, then refresh list
+  const loadRecipes = useCallback(() => {
+    getRecipes().then(setRecipes).catch(console.error)
+  }, [])
+
+  useEffect(() => { loadRecipes() }, [loadRecipes])
+
   function handleAdd(form) {
-    setRecipes(prev => [...prev, {
-      id:         Math.max(...prev.map(r => r.id), 0) + 1,
+    createRecipe({
       coffeeName: form.coffeeName,
-      roaster:    form.roaster   || '',
+      roaster:    form.roaster   || null,
       roast:      form.roast,
       dose:       Number(form.dose),
       yield:      Number(form.yield),
       time:       Number(form.time),
       grinder:    Number(form.grinder),
-      notes:      form.notes     || '',
-      author:     'Joaquín', // TODO: replace with logged-in user
-      likes:      0,
-      createdAt:  new Date().toISOString().split('T')[0],
-    }])
-    setShowForm(false)
+      notes:      form.notes     || null,
+    })
+      .then(() => { loadRecipes(); setShowForm(false) })
+      .catch(console.error)
   }
 
-  // TODO: replace body with → POST /api/recipes/:id/like
   function handleLike(id) {
-    setRecipes(prev => prev.map(r => r.id === id ? { ...r, likes: r.likes + 1 } : r))
+    likeRecipe(id).then(loadRecipes).catch(console.error)
   }
 
-  // TODO: replace body with → DELETE /api/recipes/:id, then refresh list
   function handleDeleteConfirm() {
-    setRecipes(prev => prev.filter(r => r.id !== toDelete.id))
-    setToDelete(null)
+    deleteRecipe(toDelete.id)
+      .then(() => { loadRecipes(); setToDelete(null) })
+      .catch(console.error)
   }
 
   return (
@@ -107,7 +101,6 @@ export default function RecipesPage() {
               <Avatar name={r.author} />
               <span className="text-ink-secondary text-sm truncate">{r.author}</span>
             </div>
-            {/* TODO: wire to → POST /api/recipes/:id/like */}
             <button
               onClick={() => handleLike(r.id)}
               className="w-12 flex items-center justify-end gap-1 text-ink-muted hover:text-red-400 text-sm transition-colors"
