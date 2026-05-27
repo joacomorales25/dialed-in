@@ -1,13 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { getCoffees, createCoffee, deleteCoffee } from '../api'
 import CoffeeForm    from '../components/coffees/CoffeeForm'
 import ConfirmDialog from '../components/ConfirmDialog'
-
-// TODO: replace with API call → GET /api/coffees
-const MOCK_COFFEES = [
-  { id: 1, name: 'Ethiopia Yirgacheffe',    roaster: 'Onyx Coffee Lab', origin: 'Ethiopia',  process: 'Washed',  roast: 'light',  roastDate: '2026-04-01', notes: 'Jasmine, peach, black tea' },
-  { id: 2, name: 'Colombia El Paraíso',     roaster: 'Intelligentsia',  origin: 'Colombia',  process: 'Natural', roast: 'medium', roastDate: '2026-03-28', notes: 'Chocolate, caramel, red berries' },
-  { id: 3, name: 'Guatemala Huehuetenango', roaster: 'Stumptown',       origin: 'Guatemala', process: 'Honey',   roast: 'dark',   roastDate: '2026-04-05', notes: 'Cacao, tobacco, walnut' },
-]
 
 const roastDot = { light: 'bg-amber-300', medium: 'bg-orange-500', dark: 'bg-stone-500' }
 
@@ -23,15 +17,18 @@ const TrashIcon = () => (
 )
 
 export default function CoffeesPage() {
-  // TODO: replace initial value with API fetch → GET /api/coffees
-  const [coffees, setCoffees]       = useState(MOCK_COFFEES)
-  const [showForm, setShowForm]     = useState(false)
-  const [toDelete, setToDelete]     = useState(null) // coffee object pending deletion
+  const [coffees, setCoffees]   = useState([])
+  const [showForm, setShowForm] = useState(false)
+  const [toDelete, setToDelete] = useState(null)
 
-  // TODO: replace body with → POST /api/coffees, then refresh list
+  const load = useCallback(() => {
+    getCoffees().then(setCoffees).catch(console.error)
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
   function handleAdd(form) {
-    setCoffees(prev => [...prev, {
-      id:        Math.max(...prev.map(c => c.id), 0) + 1,
+    createCoffee({
       name:      form.name,
       roaster:   form.roaster,
       origin:    form.origin    || null,
@@ -40,14 +37,13 @@ export default function CoffeesPage() {
       roast:     form.roast,
       roastDate: form.roastDate || null,
       notes:     form.notes     || null,
-    }])
-    setShowForm(false)
+    }).then(() => { load(); setShowForm(false) }).catch(console.error)
   }
 
-  // TODO: replace body with → DELETE /api/coffees/:id, then refresh list
   function handleDeleteConfirm() {
-    setCoffees(prev => prev.filter(c => c.id !== toDelete.id))
-    setToDelete(null)
+    deleteCoffee(toDelete.id)
+      .then(() => { load(); setToDelete(null) })
+      .catch(console.error)
   }
 
   return (
@@ -101,7 +97,6 @@ export default function CoffeesPage() {
       </div>
 
       {showForm && <CoffeeForm onSubmit={handleAdd} onClose={() => setShowForm(false)} />}
-
       {toDelete && (
         <ConfirmDialog
           title={`Delete "${toDelete.name}"?`}
