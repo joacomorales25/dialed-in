@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from typing import Optional
-from datetime import date
+from datetime import date as _date
 
 _config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
@@ -16,7 +16,7 @@ class CoffeeBase(BaseModel):
     altitude:   Optional[str]  = None
     process:    Optional[str]  = None
     roast:      str
-    roast_date: Optional[date] = None
+    roast_date: Optional[_date] = None
     notes:      Optional[str]  = None
 
 class CoffeeCreate(CoffeeBase):
@@ -40,7 +40,7 @@ class ShotBase(BaseModel):
     notes:     Optional[str]   = None
     rating:    int
     dialed_in: bool             = False
-    date:      Optional[date]  = None
+    date:      Optional[_date]  = None
 
 class ShotCreate(ShotBase):
     pass
@@ -61,7 +61,7 @@ class RecipeBase(BaseModel):
     time:        int
     grinder:     float
     notes:       Optional[str] = None
-    created_at:  Optional[date] = None
+    created_at:  Optional[_date] = None
 
 class RecipeCreate(RecipeBase):
     pass
