@@ -126,7 +126,9 @@ export default function ShotsPage() {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {shots.map(s => (
+        {shots.map(s => {
+          const recName = recipeName(s.recipeId)
+          return (
           <div key={s.id} className="flex items-center px-6 py-3.5 hover:bg-app-hover border-b border-app-border gap-4 group transition-colors">
             <span className="w-16 text-ink-secondary text-sm">{fmtDate(s.date)}</span>
             <span className="w-20 text-ink-primary text-sm font-medium tabular-nums">{s.dose}g → {s.yield}g</span>
@@ -135,8 +137,8 @@ export default function ShotsPage() {
             <div className="w-16"><Stars n={s.rating} /></div>
             <span className="flex-1 text-ink-muted text-sm truncate hidden md:block">{s.notes}</span>
             <span className="w-24 hidden lg:block">
-              {recipeName(s.recipeId)
-                ? <span className="text-xs bg-app-accent/10 text-app-accent border border-app-accent/20 px-2 py-0.5 rounded-full truncate max-w-full block">{recipeName(s.recipeId)}</span>
+              {recName
+                ? <span className="text-xs bg-app-accent/10 text-app-accent border border-app-accent/20 px-2 py-0.5 rounded-full truncate max-w-full block">{recName}</span>
                 : <span className="text-ink-muted text-sm">–</span>
               }
             </span>
@@ -153,7 +155,7 @@ export default function ShotsPage() {
               <TrashIcon />
             </button>
           </div>
-        ))}
+        )})}
       </div>
 
       {showForm && (
