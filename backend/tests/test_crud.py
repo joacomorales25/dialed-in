@@ -81,6 +81,18 @@ def test_create_shot_returns_dict_with_id(conn):
     assert result["yield"] == 36.0
 
 
+def test_get_shot_returns_row(conn):
+    coffee = _make_coffee(conn)
+    data = {"coffee_id": coffee["id"], "recipe_id": None, "dose": 18.0,
+            "yield_": 36.0, "time": 27, "grinder": 12.0, "pressure": None,
+            "notes": None, "rating": 4, "dialed_in": False, "date": None}
+    shot = crud.create_shot(conn, data)
+    result = crud.get_shot(conn, shot["id"])
+    assert result is not None
+    assert result["id"] == shot["id"]
+    assert result["yield"] == 36.0
+
+
 def test_get_all_shots_filter_by_coffee_id(conn):
     c1 = _make_coffee(conn)
     c2 = crud.create_coffee(conn, {"name": "B", "roaster": "Z", "roast": "dark",
