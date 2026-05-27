@@ -1,0 +1,6 @@
+# Local dev tools
+.agents/
+.claude/skills/
+
+# OS
+.DS_Store

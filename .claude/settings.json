@@ -1,5 +1,8 @@
 {
   "permissions": {
-    "allow": []
+    "allow": [
+      "Bash(python3 -m pytest tests/test_crud.py -v)",
+      "Bash(python3 -m pytest tests/ -v)"
+    ]
   }
 }
