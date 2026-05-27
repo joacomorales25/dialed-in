@@ -37,14 +37,14 @@ export default function SettingsPage() {
             <div className="space-y-3">
               <div>
                 <label className="label">Language</label>
-                <select name="language" value={settings.language} onChange={handleChange} className="input">
-                  <option>English</option>
-                  <option>Español</option>
+                <select name="language" value={settings.language ?? ''} onChange={handleChange} className="input">
+                  <option value="English">English</option>
+                  <option value="Español">Español</option>
                 </select>
               </div>
               <div>
                 <label className="label">Units</label>
-                <select name="units" value={settings.units} onChange={handleChange} className="input">
+                <select name="units" value={settings.units ?? ''} onChange={handleChange} className="input">
                   <option value="metric">Metric (g, ml)</option>
                   <option value="imperial">Imperial (oz)</option>
                 </select>
@@ -61,15 +61,15 @@ export default function SettingsPage() {
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="label">Dose (g)</label>
-                <input type="number" name="defaultDose" value={settings.defaultDose} onChange={handleChange} step="0.1" className="input" />
+                <input type="number" name="defaultDose" value={settings.defaultDose ?? ''} onChange={handleChange} step="0.1" className="input" />
               </div>
               <div>
                 <label className="label">Yield (g)</label>
-                <input type="number" name="defaultYield" value={settings.defaultYield} onChange={handleChange} step="0.1" className="input" />
+                <input type="number" name="defaultYield" value={settings.defaultYield ?? ''} onChange={handleChange} step="0.1" className="input" />
               </div>
               <div>
                 <label className="label">Time (s)</label>
-                <input type="number" name="defaultTime" value={settings.defaultTime} onChange={handleChange} className="input" />
+                <input type="number" name="defaultTime" value={settings.defaultTime ?? ''} onChange={handleChange} className="input" />
               </div>
             </div>
           </section>

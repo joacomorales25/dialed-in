@@ -6,13 +6,14 @@ import { getRecipes, createRecipe, likeRecipe, deleteRecipe } from '../api'
 const roastColor = { light: 'text-amber-400', medium: 'text-orange-400', dark: 'text-stone-400' }
 
 function fmtDate(iso) {
+  if (!iso) return '—'
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 function Avatar({ name }) {
   return (
     <div className="w-6 h-6 rounded-full bg-app-surface border border-app-border flex items-center justify-center text-xs text-ink-secondary font-medium flex-shrink-0">
-      {name[0].toUpperCase()}
+      {(name?.[0] ?? '?').toUpperCase()}
     </div>
   )
 }
@@ -95,7 +96,7 @@ export default function RecipesPage() {
             </div>
             <span className={`w-16 text-sm capitalize hidden sm:block ${roastColor[r.roast]}`}>{r.roast}</span>
             <span className="w-28 text-ink-secondary text-sm hidden md:block tabular-nums">{r.dose}g · {r.yield}g · {r.time}s · #{r.grinder}</span>
-            <span className="w-12 text-ink-muted text-sm hidden md:block tabular-nums">1:{(r.yield / r.dose).toFixed(1)}</span>
+            <span className="w-12 text-ink-muted text-sm hidden md:block tabular-nums">{r.dose > 0 ? `1:${(r.yield / r.dose).toFixed(1)}` : '—'}</span>
             <span className="w-24 text-ink-muted text-sm truncate hidden lg:block">{r.notes}</span>
             <div className="w-24 items-center gap-1.5 hidden sm:flex">
               <Avatar name={r.author} />

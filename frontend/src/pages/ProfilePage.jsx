@@ -55,29 +55,29 @@ export default function ProfilePage() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="label">Name</label>
-                <input name="name" value={form.name} onChange={handleChange} className="input" />
+                <input name="name" value={form.name ?? ''} onChange={handleChange} className="input" />
               </div>
               <div>
                 <label className="label">Username</label>
-                <input name="username" value={form.username} onChange={handleChange} className="input" />
+                <input name="username" value={form.username ?? ''} onChange={handleChange} className="input" />
               </div>
             </div>
             <div>
               <label className="label">Email</label>
-              <input name="email" type="email" value={form.email} onChange={handleChange} className="input" />
+              <input name="email" type="email" value={form.email ?? ''} onChange={handleChange} className="input" />
             </div>
             <div>
               <label className="label">Bio</label>
-              <textarea name="bio" value={form.bio} onChange={handleChange} rows={2} className="input resize-none" />
+              <textarea name="bio" value={form.bio ?? ''} onChange={handleChange} rows={2} className="input resize-none" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="label">Machine</label>
-                <input name="machine" value={form.machine} onChange={handleChange} className="input" />
+                <input name="machine" value={form.machine ?? ''} onChange={handleChange} className="input" />
               </div>
               <div>
                 <label className="label">Grinder</label>
-                <input name="grinder" value={form.grinder} onChange={handleChange} className="input" />
+                <input name="grinder" value={form.grinder ?? ''} onChange={handleChange} className="input" />
               </div>
             </div>
             <div className="flex gap-2 pt-1">
