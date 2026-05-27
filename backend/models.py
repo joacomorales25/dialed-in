@@ -53,18 +53,26 @@ class Shot(ShotBase):
 
 class RecipeBase(BaseModel):
     model_config = _config
+    coffee_id:   int
     coffee_name: str
     roaster:     Optional[str] = None
     roast:       str
     dose:        float
-    yield_:      float          = Field(alias="yield")
+    yield_:      float         = Field(alias="yield")
     time:        int
     grinder:     float
     notes:       Optional[str] = None
     created_at:  Optional[_date] = None
 
-class RecipeCreate(RecipeBase):
-    pass
+class RecipeCreate(BaseModel):
+    model_config = _config
+    coffee_id: int
+    roast:     str
+    dose:      float
+    yield_:    float          = Field(alias="yield")
+    time:      int
+    grinder:   float
+    notes:     Optional[str] = None
 
 class Recipe(RecipeBase):
     id:     int

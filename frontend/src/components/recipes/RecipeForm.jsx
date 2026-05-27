@@ -1,11 +1,11 @@
 import { useState } from 'react'
 
 const EMPTY = {
-  coffeeName: '', roaster: '', roast: 'medium',
+  coffeeId: '', roast: 'medium',
   dose: 18, yield: 36, time: 27, grinder: 10, notes: '',
 }
 
-export default function RecipeForm({ onSubmit, onClose }) {
+export default function RecipeForm({ onSubmit, onClose, coffees = [] }) {
   const [form, setForm] = useState(EMPTY)
 
   function handleChange(e) {
@@ -33,22 +33,24 @@ export default function RecipeForm({ onSubmit, onClose }) {
 
         <form onSubmit={handleSubmit} className="px-5 py-4 space-y-3">
           <div>
-            <label className="label">Coffee name *</label>
-            <input name="coffeeName" value={form.coffeeName} onChange={handleChange} placeholder="Ethiopia Yirgacheffe" className="input" required />
+            <label className="label">Coffee *</label>
+            <select name="coffeeId" value={form.coffeeId} onChange={handleChange} className="input" required>
+              <option value="">Select a coffee…</option>
+              {coffees.map(c => (
+                <option key={c.id} value={c.id}>{c.name} — {c.roaster}</option>
+              ))}
+            </select>
+            {coffees.length === 0 && (
+              <p className="text-ink-muted text-xs mt-1">No coffees yet — add one first.</p>
+            )}
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="label">Roaster</label>
-              <input name="roaster" value={form.roaster} onChange={handleChange} placeholder="Onyx" className="input" />
-            </div>
-            <div>
-              <label className="label">Roast</label>
-              <select name="roast" value={form.roast} onChange={handleChange} className="input">
-                <option value="light">Light</option>
-                <option value="medium">Medium</option>
-                <option value="dark">Dark</option>
-              </select>
-            </div>
+          <div>
+            <label className="label">Roast</label>
+            <select name="roast" value={form.roast} onChange={handleChange} className="input">
+              <option value="light">Light</option>
+              <option value="medium">Medium</option>
+              <option value="dark">Dark</option>
+            </select>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>

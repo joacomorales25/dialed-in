@@ -35,12 +35,13 @@ def test_shot_deserialises_yield_from_json():
 
 
 def test_recipe_has_created_at():
-    r = Recipe(id=1, coffee_name="Ethiopia", roast="light", dose=18.0,
+    r = Recipe(id=1, coffee_id=42, coffee_name="Ethiopia", roast="light", dose=18.0,
                yield_=36.0, time=27, grinder=12.0, author="Joaquín",
                likes=0, created_at=date(2026, 5, 1),
                roaster=None, notes=None)
     d = r.model_dump(by_alias=True)
     assert "createdAt" in d
+    assert "coffeeId" in d
 
 
 def test_settings_serialises_default_dose():

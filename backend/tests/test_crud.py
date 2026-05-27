@@ -118,15 +118,26 @@ def test_delete_shot(conn):
 
 # ── Recipes ────────────────────────────────────────────────
 
+def _make_recipe_data(conn):
+    coffee = _make_coffee(conn)
+    return {
+        "coffee_id": coffee["id"],
+        "coffee_name": coffee["name"],
+        "roaster": coffee["roaster"],
+        "roast": "light",
+        "dose": 18.0, "yield_": 36.0, "time": 27, "grinder": 12.0,
+        "notes": None, "author": "Joaquín", "likes": 0,
+        "created_at": "2026-05-01",
+    }
+
+
 def test_create_recipe_returns_dict(conn):
-    data = {"coffee_name": "Ethiopia", "roaster": "Onyx", "roast": "light",
-            "dose": 18.0, "yield_": 36.0, "time": 27, "grinder": 12.0,
-            "notes": None, "author": "Joaquín", "likes": 0,
-            "created_at": "2026-05-01"}
+    data = _make_recipe_data(conn)
     result = crud.create_recipe(conn, data)
     assert result["id"] == 1
     assert result["author"] == "Joaquín"
     assert result["yield"] == 36.0
+    assert result["coffee_id"] is not None
 
 
 def test_get_all_recipes_empty(conn):
@@ -134,10 +145,7 @@ def test_get_all_recipes_empty(conn):
 
 
 def test_like_recipe_increments(conn):
-    data = {"coffee_name": "X", "roaster": None, "roast": "dark",
-            "dose": 18.0, "yield_": 36.0, "time": 27, "grinder": 11.0,
-            "notes": None, "author": "User", "likes": 0,
-            "created_at": "2026-05-01"}
+    data = _make_recipe_data(conn)
     crud.create_recipe(conn, data)
     result = crud.like_recipe(conn, 1)
     assert result["likes"] == 1
@@ -148,10 +156,7 @@ def test_like_recipe_not_found_returns_none(conn):
 
 
 def test_delete_recipe(conn):
-    data = {"coffee_name": "Y", "roaster": None, "roast": "light",
-            "dose": 18.0, "yield_": 36.0, "time": 28, "grinder": 12.0,
-            "notes": None, "author": "User", "likes": 0,
-            "created_at": "2026-05-01"}
+    data = _make_recipe_data(conn)
     crud.create_recipe(conn, data)
     assert crud.delete_recipe(conn, 1) is True
 

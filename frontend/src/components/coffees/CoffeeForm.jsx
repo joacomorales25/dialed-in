@@ -7,13 +7,22 @@ const EMPTY = {
 
 export default function CoffeeForm({ onSubmit, onClose }) {
   const [form, setForm] = useState(EMPTY)
+  const [dateError, setDateError] = useState('')
+  const today = new Date().toISOString().split('T')[0]
 
   function handleChange(e) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    if (name === 'roastDate' && value && value > today) {
+      setDateError('Roast date cannot be in the future')
+    } else if (name === 'roastDate') {
+      setDateError('')
+    }
+    setForm(prev => ({ ...prev, [name]: value }))
   }
 
   function handleSubmit(e) {
     e.preventDefault()
+    if (dateError) return
     onSubmit(form)
   }
 
@@ -69,7 +78,8 @@ export default function CoffeeForm({ onSubmit, onClose }) {
           </div>
           <div>
             <label className="label">Roast date</label>
-            <input type="date" name="roastDate" value={form.roastDate} onChange={handleChange} className="input" />
+            <input type="date" name="roastDate" value={form.roastDate} onChange={handleChange} max={today} className="input" />
+            {dateError && <p className="text-red-400 text-xs mt-1">{dateError}</p>}
           </div>
           <div>
             <label className="label">Tasting notes</label>

@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS shots (
 
 CREATE TABLE IF NOT EXISTS recipes (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    coffee_id   INTEGER REFERENCES coffees(id),
     coffee_name TEXT    NOT NULL,
     roaster     TEXT,
     roast       TEXT    NOT NULL,
@@ -89,6 +90,12 @@ def _init_schema(conn: sqlite3.Connection) -> None:
     conn.execute("INSERT OR IGNORE INTO profile  (id) VALUES (1)")
     conn.execute("INSERT OR IGNORE INTO settings (id) VALUES (1)")
     conn.commit()
+    # Migration: add coffee_id column to recipes if it doesn't exist yet
+    try:
+        conn.execute("ALTER TABLE recipes ADD COLUMN coffee_id INTEGER REFERENCES coffees(id)")
+        conn.commit()
+    except Exception:
+        pass  # column already exists
 
 
 def create_tables() -> None:

@@ -79,8 +79,8 @@ def get_all_recipes(conn: sqlite3.Connection) -> list[dict]:
 def create_recipe(conn: sqlite3.Connection, data: dict) -> dict:
     cur = conn.execute(
         """INSERT INTO recipes
-           (coffee_name, roaster, roast, dose, yield, time, grinder, notes, author, likes, created_at)
-           VALUES (:coffee_name, :roaster, :roast, :dose, :yield_, :time, :grinder, :notes, :author, :likes, :created_at)""",
+           (coffee_id, coffee_name, roaster, roast, dose, yield, time, grinder, notes, author, likes, created_at)
+           VALUES (:coffee_id, :coffee_name, :roaster, :roast, :dose, :yield_, :time, :grinder, :notes, :author, :likes, :created_at)""",
         data,
     )
     conn.commit()

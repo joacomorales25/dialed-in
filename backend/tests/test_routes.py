@@ -94,23 +94,24 @@ def test_list_recipes_empty(client):
 
 
 def test_create_recipe_sets_author_from_profile(client):
-    # First set the profile name
-    client.put("/api/profile/", json={
-        "name": "Joaquín", "email": "j@test.com", "username": "jq"
-    })
-    payload = {"coffeeName": "Ethiopia", "roast": "light", "dose": 18.0,
+    client.put("/api/profile/", json={"name": "Joaquín", "email": "j@test.com", "username": "jq"})
+    coffee = _create_coffee(client)
+    payload = {"coffeeId": coffee["id"], "roast": "light", "dose": 18.0,
                "yield": 36.0, "time": 27, "grinder": 12.0}
     r = client.post("/api/recipes/", json=payload)
     assert r.status_code == 201
     data = r.json()
     assert data["author"] == "Joaquín"
+    assert data["coffeeName"] == "X"
+    assert data["coffeeId"] == coffee["id"]
     assert "createdAt" in data
 
 
 def test_like_recipe(client):
     client.put("/api/profile/", json={"name": "User", "email": "", "username": "u"})
+    coffee = _create_coffee(client)
     r = client.post("/api/recipes/", json={
-        "coffeeName": "X", "roast": "dark", "dose": 18.0,
+        "coffeeId": coffee["id"], "roast": "dark", "dose": 18.0,
         "yield": 36.0, "time": 27, "grinder": 11.0,
     })
     recipe_id = r.json()["id"]
@@ -120,8 +121,9 @@ def test_like_recipe(client):
 
 def test_delete_recipe(client):
     client.put("/api/profile/", json={"name": "User", "email": "", "username": "u"})
+    coffee = _create_coffee(client)
     r = client.post("/api/recipes/", json={
-        "coffeeName": "Y", "roast": "light", "dose": 18.0,
+        "coffeeId": coffee["id"], "roast": "light", "dose": 18.0,
         "yield": 36.0, "time": 28, "grinder": 12.0,
     })
     rid = r.json()["id"]

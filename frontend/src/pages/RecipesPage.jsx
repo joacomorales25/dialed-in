@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import RecipeForm    from '../components/recipes/RecipeForm'
 import ConfirmDialog from '../components/ConfirmDialog'
-import { getRecipes, createRecipe, likeRecipe, deleteRecipe } from '../api'
+import { getRecipes, createRecipe, likeRecipe, deleteRecipe, getCoffees } from '../api'
 
 const roastColor = { light: 'text-amber-400', medium: 'text-orange-400', dark: 'text-stone-400' }
 
@@ -26,6 +26,7 @@ const TrashIcon = () => (
 
 export default function RecipesPage() {
   const [recipes, setRecipes]   = useState([])
+  const [coffees, setCoffees]   = useState([])
   const [showForm, setShowForm] = useState(false)
   const [toDelete, setToDelete] = useState(null) // recipe object pending deletion
 
@@ -33,18 +34,20 @@ export default function RecipesPage() {
     getRecipes().then(setRecipes).catch(console.error)
   }, [])
 
-  useEffect(() => { loadRecipes() }, [loadRecipes])
+  useEffect(() => {
+    Promise.all([loadRecipes(), getCoffees().then(setCoffees)])
+      .catch(console.error)
+  }, [loadRecipes])
 
   function handleAdd(form) {
     createRecipe({
-      coffeeName: form.coffeeName,
-      roaster:    form.roaster   || null,
-      roast:      form.roast,
-      dose:       Number(form.dose),
-      yield:      Number(form.yield),
-      time:       Number(form.time),
-      grinder:    Number(form.grinder),
-      notes:      form.notes     || null,
+      coffeeId: Number(form.coffeeId),
+      roast:    form.roast,
+      dose:     Number(form.dose),
+      yield:    Number(form.yield),
+      time:     Number(form.time),
+      grinder:  Number(form.grinder),
+      notes:    form.notes || null,
     })
       .then(() => { loadRecipes(); setShowForm(false) })
       .catch(console.error)
@@ -122,7 +125,7 @@ export default function RecipesPage() {
         ))}
       </div>
 
-      {showForm && <RecipeForm onSubmit={handleAdd} onClose={() => setShowForm(false)} />}
+      {showForm && <RecipeForm coffees={coffees} onSubmit={handleAdd} onClose={() => setShowForm(false)} />}
 
       {toDelete && (
         <ConfirmDialog

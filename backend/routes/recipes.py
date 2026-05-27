@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date as _date
 from fastapi import APIRouter, Depends, HTTPException
 from database import get_db
 from models import Recipe, RecipeCreate
@@ -14,10 +14,15 @@ def list_recipes(conn=Depends(get_db)):
 
 @router.post("/", response_model=Recipe, status_code=201)
 def create_recipe(body: RecipeCreate, conn=Depends(get_db)):
+    coffee = crud.get_coffee(conn, body.coffee_id)
+    if coffee is None:
+        raise HTTPException(status_code=404, detail="Coffee not found")
     data = body.model_dump()
-    data["author"] = crud.get_profile(conn)["name"]
-    data["likes"] = 0
-    data["created_at"] = date.today().isoformat()
+    data["coffee_name"] = coffee["name"]
+    data["roaster"]     = coffee["roaster"]
+    data["author"]      = crud.get_profile(conn)["name"]
+    data["likes"]       = 0
+    data["created_at"]  = _date.today().isoformat()
     return crud.create_recipe(conn, data)
 
 
