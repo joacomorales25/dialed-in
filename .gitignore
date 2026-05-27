@@ -1,6 +1,8 @@
 # Local dev tools
 .agents/
-.claude/skills/
+.claude/
+skills-lock.json
+docs/superpowers/
 
 # OS
 .DS_Store
