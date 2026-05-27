@@ -126,6 +126,7 @@ def test_create_recipe_returns_dict(conn):
     result = crud.create_recipe(conn, data)
     assert result["id"] == 1
     assert result["author"] == "Joaquín"
+    assert result["yield"] == 36.0
 
 
 def test_get_all_recipes_empty(conn):
