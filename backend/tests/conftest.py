@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 @pytest.fixture
 def db_conn(tmp_path):
     """Isolated SQLite connection with full schema applied."""
-    conn = sqlite3.connect(str(tmp_path / "test.db"))
+    conn = sqlite3.connect(str(tmp_path / "test.db"), check_same_thread=False)
     conn.row_factory = sqlite3.Row
     _init_schema(conn)
     yield conn
