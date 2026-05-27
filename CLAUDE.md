@@ -1,4 +1,4 @@
-# GaggiMate
+# DialedIn
 
 Espresso shot tracker and recipe manager. Track coffees, log shots with parameters (dose, yield, time, grinder), and browse community recipes.
 

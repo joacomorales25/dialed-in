@@ -2,7 +2,7 @@ import os
 import sqlite3
 from typing import Generator
 
-DB_PATH: str = os.path.join(os.path.dirname(__file__), "gaggimate.db")
+DB_PATH: str = os.path.join(os.path.dirname(__file__), "dialedin.db")
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS coffees (

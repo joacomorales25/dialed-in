@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import create_tables
 from routes import coffees, shots, recipes, profile, settings
 
-app = FastAPI(title="Gaggimate API", version="0.1.0")
+app = FastAPI(title="DialedIn API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,

@@ -109,8 +109,8 @@ export default function Layout({ children }) {
             onClick={() => setWorkspaceOpen(o => !o)}
             className="flex items-center gap-2.5 px-1.5 py-1.5 rounded-md hover:bg-app-hover cursor-pointer w-full transition-colors"
           >
-            <div className="w-6 h-6 rounded-md bg-app-accent flex items-center justify-center text-white text-xs font-bold flex-shrink-0">G</div>
-            <span className="text-ink-primary font-medium text-sm tracking-tight flex-1 text-left">GaggiMate</span>
+            <div className="w-6 h-6 rounded-md bg-app-accent flex items-center justify-center text-white text-xs font-bold flex-shrink-0">D</div>
+            <span className="text-ink-primary font-medium text-sm tracking-tight flex-1 text-left">DialedIn</span>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-ink-muted">
               <polyline points="6 9 12 15 18 9"/>
             </svg>
